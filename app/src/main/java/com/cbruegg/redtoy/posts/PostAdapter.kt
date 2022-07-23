@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import coil.load
+import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.RowPostBinding
 import com.cbruegg.redtoy.net.Post
 
@@ -17,7 +19,13 @@ class PostAdapter(var posts: List<Post>, val onPostClicked: (Post) -> Unit): Rec
         val post = posts[position]
         holder.binding.postTitle.text = post.title
         holder.binding.postAuthor.text = post.author
-        // TODO Show thumbnail
+        if (post.thumbnail == "self") {
+            holder.binding.postImage.setImageResource(R.drawable.ic_baseline_article_24)
+        } else {
+            holder.binding.postImage.load(post.thumbnail) {
+                crossfade(true)
+            }
+        }
         holder.binding.root.setOnClickListener { onPostClicked(post) }
     }
 
