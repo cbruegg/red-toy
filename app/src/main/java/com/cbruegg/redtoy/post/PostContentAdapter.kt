@@ -13,7 +13,6 @@ import com.cbruegg.redtoy.net.CommentsData
 import com.cbruegg.redtoy.net.Post
 
 // TODO Write tests
-// TODO Indent comments
 class PostContentAdapter(
     var post: Post?,
     var comments: List<CommentsData>,

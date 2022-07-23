@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// TODO How to save ViewModel state?
-
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val simplifiedRedditService: SimplifiedRedditService,
