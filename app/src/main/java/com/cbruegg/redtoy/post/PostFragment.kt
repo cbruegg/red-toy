@@ -11,7 +11,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.FragmentPostBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -35,6 +37,15 @@ class PostFragment: Fragment() {
         binding.postContentList.adapter = postAdapter
         binding.postContentList.layoutManager = layoutManager
         binding.postContentList.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+
+        viewModel.pendingNetworkError.flowWithLifecycle(lifecycle)
+            .onEach { pendingNetworkError ->
+                view?.let {
+                    Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
+                    viewModel.setUserHasSeenError()
+                }
+            }
+            .launchIn(lifecycleScope)
 
         viewModel.post.flowWithLifecycle(lifecycle)
             .onEach { post ->

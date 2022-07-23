@@ -20,8 +20,11 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
     private val _posts = MutableStateFlow<List<Post>?>(null)
     val posts: StateFlow<List<Post>?> = _posts
 
-    val _isLoading = MutableStateFlow(true)
+    private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _pendingNetworkError = MutableStateFlow(false)
+    val pendingNetworkError: StateFlow<Boolean> = _pendingNetworkError
 
     init {
         refresh()
@@ -33,11 +36,16 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
             try {
                 _posts.value = simplifiedRedditService.getPosts(subreddit.value, "hot", 50)
             } catch (e: IOException) {
-                // TODO Display error
+                e.printStackTrace()
+                _pendingNetworkError.value = true
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun setUserHasSeenError() {
+        _pendingNetworkError.value = false
     }
 
 }

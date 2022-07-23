@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Red Toy</string>
     <string name="refresh">Refresh</string>
+    <string name="network_error">There has been a network error. Please try again.</string>
 </resources>
