@@ -36,9 +36,6 @@ class PostFragment: Fragment() {
         binding.postContentList.layoutManager = layoutManager
         binding.postContentList.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
 
-        // TODO Add refresh button? Or pull to refresh?
-
-
         viewModel.post.flowWithLifecycle(lifecycle)
             .onEach { post ->
                 postAdapter.post = post

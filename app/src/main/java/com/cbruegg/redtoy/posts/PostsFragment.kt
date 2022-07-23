@@ -8,10 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.FragmentPostsBinding
+import com.cbruegg.redtoy.util.navigate
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -53,7 +53,7 @@ class PostsFragment : Fragment() {
 
 
         val postAdapter = PostAdapter(emptyList()) { post ->
-            findNavController().navigate(
+            navigate(
                 PostsFragmentDirections.actionPostsFragmentToPostFragment(
                     post.permalink
                 )
