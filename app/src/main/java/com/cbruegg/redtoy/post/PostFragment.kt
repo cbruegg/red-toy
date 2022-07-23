@@ -1,21 +1,20 @@
 package com.cbruegg.redtoy.post
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cbruegg.redtoy.databinding.FragmentPostBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class PostFragment: Fragment() {
@@ -31,7 +30,7 @@ class PostFragment: Fragment() {
     ): View {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
 
-        val postAdapter = PostContentAdapter(null, emptyList())
+        val postAdapter = PostContentAdapter(null, emptyList(), onLinkClick = viewModel::onLinkClick)
         val layoutManager = LinearLayoutManager(context)
         binding.postContentList.adapter = postAdapter
         binding.postContentList.layoutManager = layoutManager
@@ -39,29 +38,29 @@ class PostFragment: Fragment() {
 
         // TODO Add refresh button? Or pull to refresh?
 
-        val postAdapterMutex = Mutex()
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.post.collect { post ->
-                    postAdapterMutex.withLock { // TODO Is this lock even needed? This runs on Dispatcher.Main, so should be single-threaded
-                        postAdapter.post = post
-                        postAdapter.notifyDataSetChanged()
-                    }
+        viewModel.post.flowWithLifecycle(lifecycle)
+            .onEach { post ->
+                postAdapter.post = post
+                postAdapter.notifyDataSetChanged()
+            }
+            .launchIn(lifecycleScope)
+
+        viewModel.comments.flowWithLifecycle(lifecycle)
+            .onEach { comments ->
+                postAdapter.comments = comments ?: emptyList()
+                postAdapter.notifyDataSetChanged()
+            }
+            .launchIn(lifecycleScope)
+
+        viewModel.requestedOpenLink.flowWithLifecycle(lifecycle)
+            .onEach { link ->
+                if (link != null) {
+                    startActivity(Intent.parseUri(link, 0))
+                    viewModel.didOpenLink()
                 }
             }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.comments.collect { comments ->
-                    postAdapterMutex.withLock {
-                        postAdapter.comments = comments ?: emptyList()
-                        postAdapter.notifyDataSetChanged()
-                    }
-                }
-            }
-        }
+            .launchIn(lifecycleScope)
 
         return binding.root
     }

@@ -26,6 +26,9 @@ class PostViewModel @Inject constructor(
     private val _comments = MutableStateFlow<List<CommentsData>?>(null)
     val comments: StateFlow<List<CommentsData>?> = _comments
 
+    private val _requestedOpenLink = MutableStateFlow<String?>(null)
+    val requestedOpenLink: StateFlow<String?> = _requestedOpenLink
+
     init {
         viewModelScope.launch {
             val permalink = state.get<String>("permalink") ?: throw IllegalArgumentException("State is missing permalink!")
@@ -33,6 +36,14 @@ class PostViewModel @Inject constructor(
             _post.value = post
             _comments.value = comments
         }
+    }
+
+    fun onLinkClick() {
+        _requestedOpenLink.value = _post.value?.url
+    }
+
+    fun didOpenLink() {
+        _requestedOpenLink.value = null
     }
 
 }
