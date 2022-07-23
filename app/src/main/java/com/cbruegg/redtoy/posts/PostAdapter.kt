@@ -16,6 +16,8 @@ class PostAdapter(var posts: List<Post>, val onPostClicked: (Post) -> Unit): Rec
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         holder.binding.postTitle.text = post.title
+        holder.binding.postAuthor.text = post.author
+        // TODO Show thumbnail
         holder.binding.root.setOnClickListener { onPostClicked(post) }
     }
 

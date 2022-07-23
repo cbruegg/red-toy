@@ -7,6 +7,7 @@ import com.cbruegg.redtoy.net.SimplifiedRedditService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,6 +16,8 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
 
     private val _posts = MutableStateFlow<List<Post>?>(null)
     val posts: StateFlow<List<Post>?> = _posts
+
+    val isLoading = posts.map { it == null }
 
     init {
         viewModelScope.launch {
