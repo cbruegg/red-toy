@@ -12,7 +12,6 @@ import com.cbruegg.redtoy.databinding.RowLoadingBinding
 import com.cbruegg.redtoy.net.CommentsData
 import com.cbruegg.redtoy.net.Post
 
-// TODO Write tests
 class PostContentAdapter(
     var post: Post?,
     var comments: List<CommentsData>,

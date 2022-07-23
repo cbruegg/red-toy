@@ -12,7 +12,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class PostsViewModel @Inject constructor(private val simplifiedRedditService: SimplifiedRedditService): ViewModel() {
+class PostsViewModel @Inject constructor(private val simplifiedRedditService: SimplifiedRedditService) :
+    ViewModel() {
 
     private val _subreddit = MutableStateFlow("androiddev")
     val subreddit: StateFlow<String> = _subreddit

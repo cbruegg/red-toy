@@ -17,7 +17,7 @@ import javax.inject.Inject
 class PostViewModel @Inject constructor(
     private val simplifiedRedditService: SimplifiedRedditService,
     private val state: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
 
     private val _post = MutableStateFlow<Post?>(null)
     val post: StateFlow<Post?> = _post
