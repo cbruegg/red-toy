@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cbruegg.redtoy.databinding.FragmentPostBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,8 +32,10 @@ class PostFragment: Fragment() {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
 
         val postAdapter = PostContentAdapter(null, emptyList())
+        val layoutManager = LinearLayoutManager(context)
         binding.postContentList.adapter = postAdapter
-        binding.postContentList.layoutManager = LinearLayoutManager(context)
+        binding.postContentList.layoutManager = layoutManager
+        binding.postContentList.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
 
         // TODO Add refresh button? Or pull to refresh?
 
