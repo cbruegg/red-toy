@@ -31,8 +31,8 @@ class PostViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val permalink = state.get<String>("permalink") ?: throw IllegalArgumentException("State is missing permalink!")
-            val (post, comments) = simplifiedRedditService.getPostData(permalink)
+            val args = PostFragmentArgs.fromSavedStateHandle(state)
+            val (post, comments) = simplifiedRedditService.getPostData(args.permalink)
             _post.value = post
             _comments.value = comments
         }
