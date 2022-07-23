@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cbruegg.redtoy.databinding.FragmentPostsBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,14 +30,17 @@ class PostsFragment : Fragment() {
     ): View {
         _binding = FragmentPostsBinding.inflate(inflater, container, false)
 
-        val postAdapter = PostAdapter(emptyList())
+
+        val postAdapter = PostAdapter(emptyList()) { post ->
+            findNavController().navigate(PostsFragmentDirections.actionPostsFragmentToPostFragment(post.permalink))
+        }
         binding.postsList.adapter = postAdapter
         binding.postsList.layoutManager = LinearLayoutManager(context)
 
         // TODO Add refresh button
         // TODO Ensure used all libraries from note
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.posts.collect { posts ->
                     postAdapter.posts = posts ?: emptyList()

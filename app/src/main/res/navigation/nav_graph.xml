@@ -7,5 +7,17 @@
     <fragment
         android:id="@+id/postsFragment"
         android:name="com.cbruegg.redtoy.posts.PostsFragment"
-        android:label="PostsFragment" />
+        android:label="PostsFragment" >
+        <action
+            android:id="@+id/action_postsFragment_to_postFragment"
+            app:destination="@id/postFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.cbruegg.redtoy.post.PostFragment"
+        android:label="PostFragment" >
+        <argument
+            android:name="permalink"
+            app:argType="string" />
+    </fragment>
 </navigation>

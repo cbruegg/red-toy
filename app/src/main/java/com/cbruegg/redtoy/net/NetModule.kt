@@ -1,5 +1,7 @@
 package com.cbruegg.redtoy.net
 
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,10 +15,20 @@ import retrofit2.create
 @Module
 object NetModule {
     @Provides
-    fun provideRedditService(): RedditService {
+    fun provideMoshi(): Moshi {
+        val postContentChildAdapter = PolymorphicJsonAdapterFactory.of(PostContentChild::class.java, "kind")
+            .withSubtype(PostContentChild.PostChild::class.java, "t3")
+            .withSubtype(PostContentChild.CommentChild::class.java, "t1")
+        return Moshi.Builder()
+            .add(postContentChildAdapter)
+            .build()
+    }
+
+    @Provides
+    fun provideRedditService(moshi: Moshi): RedditService {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.reddit.com/")
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
         return retrofit.create()
     }

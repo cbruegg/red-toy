@@ -13,10 +13,10 @@ interface RedditService {
         @Query("limit") limit: Int
     ): PostsResponse
 
-    @GET("{permalink}.json")
-    suspend fun getComments(
-        @Path("permalink") permalink: String
-    ): List<CommentsResponse>
+    @GET("{permalink}/.json")
+    suspend fun getPostData(
+        @Path("permalink", encoded = true) permalink: String
+    ): List<PostContent>
 }
 
 @JsonClass(generateAdapter = true)
@@ -48,13 +48,18 @@ data class ImageResolution(val height: Int, val width: Int, val url: String)
 data class ImageSource(val height: Int, val width: Int, val url: String)
 
 @JsonClass(generateAdapter = true)
-data class CommentsResponse(val data: CommentsResponseData)
+data class PostContent(val data: PostContentData)
 
 @JsonClass(generateAdapter = true)
-data class CommentsResponseData(val children: List<CommentsChild>)
+data class PostContentData(val children: List<PostContentChild>)
 
-@JsonClass(generateAdapter = true)
-data class CommentsChild(val kind: String, val data: CommentsData)
+sealed class PostContentChild {
+    @JsonClass(generateAdapter = true)
+    data class PostChild(val kind: String, val data: Post): PostContentChild()
+
+    @JsonClass(generateAdapter = true)
+    data class CommentChild(val kind: String, val data: CommentsData): PostContentChild()
+}
 
 @JsonClass(generateAdapter = true)
 data class CommentsData(
