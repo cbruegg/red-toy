@@ -1,15 +1,16 @@
 package com.cbruegg.redtoy.posts
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.FragmentPostsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -23,6 +24,26 @@ class PostsFragment : Fragment() {
 
     private val viewModel: PostsViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        activity?.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fragment_posts, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.refreshPosts -> {
+                        viewModel.refresh()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, this, Lifecycle.State.RESUMED)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,12 +53,17 @@ class PostsFragment : Fragment() {
 
 
         val postAdapter = PostAdapter(emptyList()) { post ->
-            findNavController().navigate(PostsFragmentDirections.actionPostsFragmentToPostFragment(post.permalink))
+            findNavController().navigate(
+                PostsFragmentDirections.actionPostsFragmentToPostFragment(
+                    post.permalink
+                )
+            )
         }
         binding.postsList.adapter = postAdapter
         binding.postsList.layoutManager = LinearLayoutManager(context)
 
-        // TODO Add refresh button
+        binding.postsSwipeRefresh.setOnRefreshListener { viewModel.refresh() }
+
         // TODO Ensure used all libraries from note
 
         viewModel.subreddit.flowWithLifecycle(lifecycle)
@@ -54,7 +80,9 @@ class PostsFragment : Fragment() {
             .launchIn(lifecycleScope)
 
         viewModel.isLoading.flowWithLifecycle(lifecycle)
-            .onEach { isLoading -> binding.postsListProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE }
+            .onEach { isLoading ->
+                binding.postsSwipeRefresh.isRefreshing = isLoading
+            }
             .launchIn(lifecycleScope)
 
         return binding.root
