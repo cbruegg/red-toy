@@ -14,6 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PostsViewModel @Inject constructor(private val simplifiedRedditService: SimplifiedRedditService): ViewModel() {
 
+    private val _subreddit = MutableStateFlow("androiddev")
+    val subreddit: StateFlow<String> = _subreddit
+
     private val _posts = MutableStateFlow<List<Post>?>(null)
     val posts: StateFlow<List<Post>?> = _posts
 
@@ -21,7 +24,7 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
 
     init {
         viewModelScope.launch {
-            _posts.value = simplifiedRedditService.getPosts("androiddev", "hot", 50)
+            _posts.value = simplifiedRedditService.getPosts(subreddit.value, "hot", 50)
         }
     }
 

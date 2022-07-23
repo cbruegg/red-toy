@@ -40,6 +40,12 @@ class PostsFragment : Fragment() {
         // TODO Add refresh button
         // TODO Ensure used all libraries from note
 
+        viewModel.subreddit.flowWithLifecycle(lifecycle)
+            .onEach { subreddit ->
+                activity?.title = "/r/$subreddit"
+            }
+            .launchIn(lifecycleScope)
+
         viewModel.posts.flowWithLifecycle(lifecycle)
             .onEach { posts ->
                 postAdapter.posts = posts ?: emptyList()
