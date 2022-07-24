@@ -13,11 +13,11 @@ This app is a sample project for experimenting with various technologies and pat
 # Features
 
 ## Overview
-![Overview](docimgs/overview.png | width=250)
+<img src="https://github.com/cbruegg/red-toy/blob/master/docimgs/overview.png?raw=true" width="250">
 This screen provides an overview of hot posts of the Android subreddit. The _swap_ button in the top right corner allows switching to a Jetpack Compose-based implementation. It should look virtually identical. Clicking the button again will revert to the traditional XML-based implementation.
 
 ## Post
-![Post](docimgs/post.png | width=250)
+<img src="https://github.com/cbruegg/red-toy/blob/master/docimgs/post.png?raw=true" width="250">
 This screen shows the content of a post. If it is a self-post, its text is displayed. If it is a link-post, a clickable link card is displayed. Below the post itself are the comments of the post. As a limitation of the tokenless Reddit API, this only displays the top level comments.
 
 # Architecture
