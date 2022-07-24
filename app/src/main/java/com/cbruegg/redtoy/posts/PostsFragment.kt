@@ -62,8 +62,6 @@ class PostsFragment : Fragment() {
 
         binding.postsSwipeRefresh.setOnRefreshListener { viewModel.refresh() }
 
-        // TODO Ensure used all libraries from note
-
         viewModel.postToOpen.flowWithLifecycle(lifecycle)
             .onEach { post ->
                 if (post != null) {
