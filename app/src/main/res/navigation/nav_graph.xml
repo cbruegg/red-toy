@@ -31,6 +31,12 @@
         <argument
             android:name="permalink"
             app:argType="string" />
+        <argument
+            android:name="postId"
+            app:argType="string" />
+        <argument
+            android:name="subreddit"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/postsComposeFragment"

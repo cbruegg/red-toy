@@ -9,12 +9,12 @@ import com.cbruegg.redtoy.databinding.RowCommentBinding
 import com.cbruegg.redtoy.databinding.RowFullLinkPostBinding
 import com.cbruegg.redtoy.databinding.RowFullSelfPostBinding
 import com.cbruegg.redtoy.databinding.RowLoadingBinding
-import com.cbruegg.redtoy.net.CommentsData
-import com.cbruegg.redtoy.net.Post
+import com.cbruegg.redtoy.db.Comment
+import com.cbruegg.redtoy.db.Post
 
 class PostContentAdapter(
     var post: Post?,
-    var comments: List<CommentsData>,
+    var comments: List<Comment>,
     val onLinkClick: () -> Unit
 ) :
     RecyclerView.Adapter<PostContentViewHolder>() {
@@ -101,7 +101,7 @@ class PostContentAdapter(
         return when (position) {
             0 -> when {
                 post == null -> ViewType.Loading.ordinal
-                post.is_self -> ViewType.SelfPost.ordinal
+                post.isSelf -> ViewType.SelfPost.ordinal
                 else -> ViewType.LinkPost.ordinal
             }
             else -> ViewType.Comment.ordinal

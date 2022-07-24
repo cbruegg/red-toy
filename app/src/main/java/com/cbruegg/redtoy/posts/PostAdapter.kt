@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.RowPostBinding
-import com.cbruegg.redtoy.net.Post
+import com.cbruegg.redtoy.db.Post
 
 class PostAdapter(var posts: List<Post>, val onPostClicked: (Post) -> Unit): RecyclerView.Adapter<PostViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {

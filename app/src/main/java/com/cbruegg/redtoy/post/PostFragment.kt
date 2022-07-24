@@ -40,9 +40,11 @@ class PostFragment: Fragment() {
 
         viewModel.pendingNetworkError.flowWithLifecycle(lifecycle)
             .onEach { pendingNetworkError ->
-                view?.let {
-                    Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
-                    viewModel.setUserHasSeenError()
+                if (pendingNetworkError) {
+                    view?.let {
+                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
+                        viewModel.setUserHasSeenError()
+                    }
                 }
             }
             .launchIn(lifecycleScope)
@@ -56,7 +58,7 @@ class PostFragment: Fragment() {
 
         viewModel.comments.flowWithLifecycle(lifecycle)
             .onEach { comments ->
-                postAdapter.comments = comments ?: emptyList()
+                postAdapter.comments = comments
                 postAdapter.notifyDataSetChanged()
             }
             .launchIn(lifecycleScope)

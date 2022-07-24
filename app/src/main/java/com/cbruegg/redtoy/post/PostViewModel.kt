@@ -3,27 +3,33 @@ package com.cbruegg.redtoy.post
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cbruegg.redtoy.net.CommentsData
-import com.cbruegg.redtoy.net.Post
-import com.cbruegg.redtoy.net.SimplifiedRedditService
+import com.cbruegg.redtoy.Repository
+import com.cbruegg.redtoy.db.Comment
+import com.cbruegg.redtoy.db.Post
+import com.cbruegg.redtoy.db.PostId
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val simplifiedRedditService: SimplifiedRedditService,
+    private val repository: Repository,
     private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private val _post = MutableStateFlow<Post?>(null)
-    val post: StateFlow<Post?> = _post
+    private val _postId = MutableStateFlow<PostId?>(null)
 
-    private val _comments = MutableStateFlow<List<CommentsData>?>(null)
-    val comments: StateFlow<List<CommentsData>?> = _comments
+    val post: StateFlow<Post?> = _postId
+        .flatMapConcat { postId -> if (postId != null) repository.post(postId) else emptyFlow() }
+        .stateIn(viewModelScope, SharingStarted.Lazily, null)
+
+    val comments: StateFlow<List<Comment>> = _postId
+        .flatMapConcat { postId -> if (postId != null) repository.commentsOfPost(postId) else emptyFlow() }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _requestedOpenLink = MutableStateFlow<String?>(null)
     val requestedOpenLink: StateFlow<String?> = _requestedOpenLink
@@ -34,10 +40,12 @@ class PostViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val args = PostFragmentArgs.fromSavedStateHandle(state)
+            val subreddit = args.subreddit
+            val permalink = args.permalink
+            val postId = args.postId
+            _postId.value = postId
             try {
-                val (post, comments) = simplifiedRedditService.getPostData(args.permalink)
-                _post.value = post
-                _comments.value = comments
+                repository.updateDataOfPost(permalink, subreddit)
             } catch (e: IOException) {
                 e.printStackTrace()
                 _pendingNetworkError.value = true
@@ -46,7 +54,7 @@ class PostViewModel @Inject constructor(
     }
 
     fun onLinkClick() {
-        _requestedOpenLink.value = _post.value?.url
+        _requestedOpenLink.value = post.value?.url
     }
 
     fun didOpenLink() {

@@ -31,7 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.FragmentPostsComposeBinding
-import com.cbruegg.redtoy.net.Post
+import com.cbruegg.redtoy.db.Post
 import com.cbruegg.redtoy.util.navigate
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -85,7 +85,9 @@ class PostsComposeFragment : Fragment() {
                 if (post != null) {
                     navigate(
                         PostsComposeFragmentDirections.actionPostsComposeFragmentToPostFragment(
-                            post.permalink
+                            post.permalink,
+                            post.id,
+                            viewModel.subreddit.value
                         )
                     )
                     viewModel.didOpenPost()
@@ -153,18 +155,18 @@ private fun SelfPostPreview() {
     Post(
         Post(
             author = "Some other author",
-            created_utc = 0,
+            createdUtc = 0,
             id = "1",
-            is_self = true,
-            is_video = false,
-            num_comments = 0,
+            isSelf = true,
+            isVideo = false,
+            numComments = 0,
             permalink = "/abc",
             selftext = "This is a self text",
-            selftext_html = null,
+            selftextHtml = null,
             thumbnail = "https://cbruegg.com/wp-content/uploads/2015/10/mensa-upb-pebble-thumb.jpg",
             title = "Some Post Title",
             url = "/abcd",
-            preview = null
+            subreddit = "androiddev"
         )
     )
 }
@@ -175,18 +177,18 @@ private fun LinkPostPreview() {
     Post(
         Post(
             author = "Some author",
-            created_utc = 0,
+            createdUtc = 0,
             id = "0",
-            is_self = false,
-            is_video = false,
-            num_comments = 0,
+            isSelf = false,
+            isVideo = false,
+            numComments = 0,
             permalink = "/abc",
             selftext = null,
-            selftext_html = null,
+            selftextHtml = null,
             thumbnail = "https://cbruegg.com/wp-content/uploads/2015/10/mensa-upb-pebble-thumb.jpg",
             title = "Some Post Title",
             url = "/abcd",
-            preview = null
+            subreddit = "androiddev"
         )
     )
 }

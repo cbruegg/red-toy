@@ -69,7 +69,9 @@ class PostsFragment : Fragment() {
                 if (post != null) {
                     navigate(
                         PostsFragmentDirections.actionPostsFragmentToPostFragment(
-                            post.permalink
+                            post.permalink,
+                            post.id,
+                            viewModel.subreddit.value
                         )
                     )
                     viewModel.didOpenPost()

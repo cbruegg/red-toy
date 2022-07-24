@@ -2,24 +2,26 @@ package com.cbruegg.redtoy.posts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cbruegg.redtoy.net.Post
-import com.cbruegg.redtoy.net.SimplifiedRedditService
+import com.cbruegg.redtoy.Repository
+import com.cbruegg.redtoy.db.Post
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
-class PostsViewModel @Inject constructor(private val simplifiedRedditService: SimplifiedRedditService) :
+class PostsViewModel @Inject constructor(private val repository: Repository) :
     ViewModel() {
 
     private val _subreddit = MutableStateFlow("androiddev")
     val subreddit: StateFlow<String> = _subreddit
 
-    private val _posts = MutableStateFlow<List<Post>?>(null)
-    val posts: StateFlow<List<Post>?> = _posts
+    val posts: StateFlow<List<Post>?> = _subreddit
+        .flatMapConcat { subreddit -> repository.postsOfSubreddit(subreddit) }
+        .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -38,7 +40,7 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                _posts.value = simplifiedRedditService.getPosts(subreddit.value, "hot", 50)
+                repository.updateSubreddit(subreddit.value)
             } catch (e: IOException) {
                 e.printStackTrace()
                 _pendingNetworkError.value = true
