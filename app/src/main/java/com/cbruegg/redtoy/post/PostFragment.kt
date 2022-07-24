@@ -15,6 +15,7 @@ import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.FragmentPostBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import io.noties.markwon.Markwon
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -32,7 +33,7 @@ class PostFragment: Fragment() {
     ): View {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
 
-        val postAdapter = PostContentAdapter(null, emptyList(), onLinkClick = viewModel::onLinkClick)
+        val postAdapter = PostContentAdapter(null, emptyList(), onLinkClick = viewModel::onLinkClick, Markwon.create(requireContext()))
         val layoutManager = LinearLayoutManager(context)
         binding.postContentList.adapter = postAdapter
         binding.postContentList.layoutManager = layoutManager

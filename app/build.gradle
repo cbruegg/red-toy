@@ -44,11 +44,11 @@ android {
 }
 
 dependencies {
-    def room_version = "2.4.2"
+    implementation "io.noties.markwon:core:4.6.2"
 
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-
     implementation "androidx.room:room-ktx:$room_version"
 
     implementation 'com.google.accompanist:accompanist-swiperefresh:0.24.13-rc'
@@ -65,7 +65,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0'
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
-
     implementation "com.google.android.material:compose-theme-adapter:1.1.14"
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
@@ -76,21 +75,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     def nav_version = "2.5.0"
 
-    // Java language implementation
     implementation("androidx.navigation:navigation-fragment:$nav_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")
-
-    // Kotlin
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-
-    // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
-
-    // Testing Navigation
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
-
-    // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -103,11 +92,9 @@ dependencies {
     implementation 'com.google.dagger:hilt-android:2.43'
     kapt 'com.google.dagger:hilt-compiler:2.43'
 
-    // For instrumentation tests
     androidTestImplementation  'com.google.dagger:hilt-android-testing:2.43'
     kaptAndroidTest 'com.google.dagger:hilt-compiler:2.43'
 
-    // For local unit tests
     testImplementation 'com.google.dagger:hilt-android-testing:2.43'
     kaptTest 'com.google.dagger:hilt-compiler:2.43'
 
@@ -117,6 +104,7 @@ dependencies {
     implementation "androidx.navigation:navigation-runtime-ktx:2.5.0"
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.0"
+
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
     testImplementation 'junit:junit:4.13.2'

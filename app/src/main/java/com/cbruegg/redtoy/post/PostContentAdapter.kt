@@ -11,11 +11,13 @@ import com.cbruegg.redtoy.databinding.RowFullSelfPostBinding
 import com.cbruegg.redtoy.databinding.RowLoadingBinding
 import com.cbruegg.redtoy.db.Comment
 import com.cbruegg.redtoy.db.Post
+import io.noties.markwon.Markwon
 
 class PostContentAdapter(
     var post: Post?,
     var comments: List<Comment>,
-    val onLinkClick: () -> Unit
+    val onLinkClick: () -> Unit,
+    private val markwon: Markwon
 ) :
     RecyclerView.Adapter<PostContentViewHolder>() {
 
@@ -68,7 +70,7 @@ class PostContentAdapter(
                         holder.binding.selfPostText.text = ""
                         holder.binding.selfPostTitle.text = ""
                     } else {
-                        holder.binding.selfPostText.text = post.selftext
+                        markwon.setMarkdown(holder.binding.selfPostText, post.selftext ?: "")
                         holder.binding.selfPostTitle.text = post.title
                     }
                 }
@@ -90,7 +92,7 @@ class PostContentAdapter(
             holder as PostContentViewHolder.Comment
             val comment = comments[position - 1]
             holder.binding.commentAuthor.text = comment.author
-            holder.binding.commentContent.text = comment.body
+            markwon.setMarkdown(holder.binding.commentContent, comment.body ?: "")
         }
     }
 
