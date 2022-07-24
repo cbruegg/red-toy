@@ -32,9 +32,16 @@ class PostViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _requestedOpenLink = MutableStateFlow<String?>(null)
+    /**
+     * Emits a link when the user clicks it. Call [didOpenLink] once the browser has been started.
+     */
     val requestedOpenLink: StateFlow<String?> = _requestedOpenLink
 
     private val _pendingNetworkError = MutableStateFlow(false)
+    /**
+     * Emits `true` if there was a network error. The UI may display a warning in this case.
+     * Call [setUserHasSeenError] afterwards.
+     */
     val pendingNetworkError: StateFlow<Boolean> = _pendingNetworkError
 
     init {

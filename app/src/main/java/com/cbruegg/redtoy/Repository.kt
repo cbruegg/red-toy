@@ -2,9 +2,9 @@ package com.cbruegg.redtoy
 
 import com.cbruegg.redtoy.db.AppDatabase
 import com.cbruegg.redtoy.db.Comment
+import com.cbruegg.redtoy.db.Post
 import com.cbruegg.redtoy.db.PostId
 import com.cbruegg.redtoy.net.CommentsData
-import com.cbruegg.redtoy.net.Post
 import com.cbruegg.redtoy.net.SimplifiedRedditService
 import dagger.Binds
 import dagger.Module
@@ -26,9 +26,9 @@ abstract class RepositoryModule {
 }
 
 interface Repository {
-    fun postsOfSubreddit(subreddit: String): Flow<List<com.cbruegg.redtoy.db.Post>>
+    fun postsOfSubreddit(subreddit: String): Flow<List<Post>>
     fun commentsOfPost(postId: PostId): Flow<List<Comment>>
-    fun post(postId: PostId): Flow<com.cbruegg.redtoy.db.Post>
+    fun post(postId: PostId): Flow<Post>
 
     @Throws(IOException::class)
     suspend fun updateSubreddit(subreddit: String)
@@ -68,8 +68,8 @@ class RepositoryImpl @Inject constructor(
     }
 }
 
-private fun Post.toDbPost(subreddit: String): com.cbruegg.redtoy.db.Post {
-    return com.cbruegg.redtoy.db.Post(
+private fun com.cbruegg.redtoy.net.Post.toDbPost(subreddit: String): Post {
+    return Post(
         id,
         subreddit,
         author,

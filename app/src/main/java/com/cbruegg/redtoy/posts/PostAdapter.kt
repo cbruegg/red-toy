@@ -9,6 +9,9 @@ import com.cbruegg.redtoy.R
 import com.cbruegg.redtoy.databinding.RowPostBinding
 import com.cbruegg.redtoy.db.Post
 
+/**
+ * Displays each post's metadata (not their content)
+ */
 class PostAdapter(var posts: List<Post>, val onPostClicked: (Post) -> Unit): RecyclerView.Adapter<PostViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = RowPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)

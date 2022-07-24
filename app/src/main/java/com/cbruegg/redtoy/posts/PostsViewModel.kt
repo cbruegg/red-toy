@@ -27,6 +27,10 @@ class PostsViewModel @Inject constructor(private val repository: Repository) :
     val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _pendingNetworkError = MutableStateFlow(false)
+    /**
+     * Emits `true` if there was a network error. The UI may display a warning in this case.
+     * Call [setUserHasSeenError] afterwards.
+     */
     val pendingNetworkError: StateFlow<Boolean> = _pendingNetworkError
 
     private val _postToOpen = MutableStateFlow<Post?>(null)

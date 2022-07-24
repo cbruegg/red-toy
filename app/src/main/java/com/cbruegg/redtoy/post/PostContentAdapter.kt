@@ -13,9 +13,15 @@ import com.cbruegg.redtoy.db.Comment
 import com.cbruegg.redtoy.db.Post
 import io.noties.markwon.Markwon
 
+/**
+ * Displays the post at position 0 and the comments after that.
+ */
 class PostContentAdapter(
     var post: Post?,
     var comments: List<Comment>,
+    /**
+     * Called when the user clicks on the link of a link post
+     */
     val onLinkClick: () -> Unit,
     private val markwon: Markwon
 ) :
@@ -66,7 +72,7 @@ class PostContentAdapter(
             val post = post
             when (holder) {
                 is PostContentViewHolder.SelfPostContent -> {
-                    if (post == null) {
+                    if (post == null) { // should not happen, but let's be safe:
                         holder.binding.selfPostText.text = ""
                         holder.binding.selfPostTitle.text = ""
                     } else {
@@ -75,7 +81,7 @@ class PostContentAdapter(
                     }
                 }
                 is PostContentViewHolder.LinkPostContent -> {
-                    if (post == null) {
+                    if (post == null) { // should not happen, but let's be safe:
                         holder.binding.linkPostLink.text = ""
                         holder.binding.linkPostLinkCard.setOnClickListener(null)
                         holder.binding.linkPostTitle.text = ""
