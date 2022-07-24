@@ -10,6 +10,6 @@
     <item
         android:id="@+id/toggleCompose"
         android:icon="@drawable/ic_baseline_swap_horiz_24"
-        android:title="@string/use_compose"
+        android:title="@string/do_not_use_compose"
         app:showAsAction="ifRoom" />
 </menu>

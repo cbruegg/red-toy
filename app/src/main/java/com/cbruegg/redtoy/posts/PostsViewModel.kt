@@ -27,6 +27,9 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
     private val _pendingNetworkError = MutableStateFlow(false)
     val pendingNetworkError: StateFlow<Boolean> = _pendingNetworkError
 
+    private val _postToOpen = MutableStateFlow<Post?>(null)
+    val postToOpen: StateFlow<Post?> = _postToOpen
+
     init {
         refresh()
     }
@@ -47,6 +50,14 @@ class PostsViewModel @Inject constructor(private val simplifiedRedditService: Si
 
     fun setUserHasSeenError() {
         _pendingNetworkError.value = false
+    }
+
+    fun clickedPost(post: Post) {
+        _postToOpen.value = post
+    }
+
+    fun didOpenPost() {
+        _postToOpen.value = null
     }
 
 }

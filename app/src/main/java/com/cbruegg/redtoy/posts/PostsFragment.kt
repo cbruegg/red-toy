@@ -39,6 +39,10 @@ class PostsFragment : Fragment() {
                         viewModel.refresh()
                         true
                     }
+                    R.id.toggleCompose -> {
+                        navigate(PostsFragmentDirections.actionPostsFragmentToPostsComposeFragment())
+                        true
+                    }
                     else -> false
                 }
             }
@@ -52,14 +56,7 @@ class PostsFragment : Fragment() {
     ): View {
         _binding = FragmentPostsBinding.inflate(inflater, container, false)
 
-
-        val postAdapter = PostAdapter(emptyList()) { post ->
-            navigate(
-                PostsFragmentDirections.actionPostsFragmentToPostFragment(
-                    post.permalink
-                )
-            )
-        }
+        val postAdapter = PostAdapter(emptyList()) { post -> viewModel.clickedPost(post) }
         binding.postsList.adapter = postAdapter
         binding.postsList.layoutManager = LinearLayoutManager(context)
 
@@ -67,11 +64,26 @@ class PostsFragment : Fragment() {
 
         // TODO Ensure used all libraries from note
 
+        viewModel.postToOpen.flowWithLifecycle(lifecycle)
+            .onEach { post ->
+                if (post != null) {
+                    navigate(
+                        PostsFragmentDirections.actionPostsFragmentToPostFragment(
+                            post.permalink
+                        )
+                    )
+                    viewModel.didOpenPost()
+                }
+            }
+            .launchIn(lifecycleScope)
+
         viewModel.pendingNetworkError.flowWithLifecycle(lifecycle)
             .onEach { pendingNetworkError ->
-                view?.let {
-                    Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
-                    viewModel.setUserHasSeenError()
+                if (pendingNetworkError) {
+                    view?.let {
+                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
+                        viewModel.setUserHasSeenError()
+                    }
                 }
             }
             .launchIn(lifecycleScope)
