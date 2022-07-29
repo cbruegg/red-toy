@@ -129,7 +129,7 @@ class PostsComposeFragment : Fragment() {
 
 @Composable
 private fun Posts(viewModel: PostsViewModel) {
-    val posts by viewModel.posts.collectAsState()
+    val posts by viewModel.posts.collectAsState() // TODO Once out of alpha, update Compose and use collectAsStateWithLifecycle
     val isLoading by viewModel.isLoading.collectAsState()
 
     SwipeRefresh(
