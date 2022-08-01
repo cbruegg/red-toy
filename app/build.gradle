@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'com.cbruegg.redtoy'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.cbruegg.redtoy"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -75,12 +75,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     def nav_version = "2.5.0"
 
-    implementation("androidx.navigation:navigation-fragment:$nav_version")
-    implementation("androidx.navigation:navigation-ui:$nav_version")
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
@@ -104,6 +104,9 @@ dependencies {
     implementation "androidx.navigation:navigation-runtime-ktx:2.5.0"
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.0"
+
+    // Use alpha version to support enableOnBackInvokedCallback (https://android-developers.googleblog.com/2022/07/prepare-your-app-to-support-predictive-back-gestures.html)
+    implementation 'androidx.activity:activity:1.6.0-alpha05'
 
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
