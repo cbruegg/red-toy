@@ -9,7 +9,7 @@ interface AppDatabase {
     fun commentDao(): CommentDao
 }
 
-@Database(entities = [Post::class, Comment::class], version = 1)
+@Database(entities = [Post::class, Comment::class], version = 1, exportSchema = false)
 abstract class RoomAppDatabase: RoomDatabase(), AppDatabase {
     abstract override fun postDao(): PostDao
     abstract override fun commentDao(): CommentDao
