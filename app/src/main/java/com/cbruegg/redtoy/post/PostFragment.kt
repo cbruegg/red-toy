@@ -2,11 +2,11 @@ package com.cbruegg.redtoy.post
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -25,6 +25,33 @@ class PostFragment: Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: PostViewModel by viewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        activity?.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fragment_post, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.sharePost -> {
+                        viewModel.post.value?.let { post ->
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_SUBJECT, post.title)
+                                putExtra(Intent.EXTRA_TEXT, "https://reddit.com${post.permalink}")
+                            }
+                            startActivity(Intent.createChooser(shareIntent, "Share post"))
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, this, Lifecycle.State.RESUMED)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
