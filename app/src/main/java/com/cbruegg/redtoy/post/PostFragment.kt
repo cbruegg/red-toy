@@ -3,8 +3,12 @@ package com.cbruegg.redtoy.post
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -25,6 +29,11 @@ class PostFragment: Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: PostViewModel by viewModels()
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,5 +88,31 @@ class PostFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+    
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_post, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+    
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_share -> {
+                sharePost()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    
+    private fun sharePost() {
+        viewModel.post.value?.let { post ->
+            val shareIntent = ShareCompat.IntentBuilder(requireContext())
+                .setType("text/plain")
+                .setSubject(post.title)
+                .setText("${post.title}\n${post.url}")
+                .createChooserIntent()
+            startActivity(shareIntent)
+        }
     }
 }
