@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Red Toy"
-include ':app'
+include(":app")
