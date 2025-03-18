@@ -1,5 +1,9 @@
 package com.cbruegg.redtoy.post
 
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MenuInflater
+
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +24,42 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class PostFragment: Fragment() {
+class PostFragment : Fragment() {
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        return true // Required to ensure the menu is visible
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.fragment_post, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.share_post -> {
+                val post = viewModel.post.value
+                if (post != null) {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, "${post.title}\n${post.url}")
+                    }
+                    startActivity(shareIntent)
+                }
+                return true
+            }
+        }
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, "${post.title}\n${post.url}")
+                    }
+                    startActivity(shareIntent)
+                }
+                return true
+            }
+        }
+    }
+return super.onOptionsItemSelected(item)
+    }
     private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
 
