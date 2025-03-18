@@ -71,5 +71,4 @@ class PostViewModel @Inject constructor(
     fun setUserHasSeenError() {
         _pendingNetworkError.value = false
     }
-
 }

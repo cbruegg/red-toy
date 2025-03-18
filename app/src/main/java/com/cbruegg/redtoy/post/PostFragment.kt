@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class PostFragment: Fragment() {
+class PostFragment : Fragment() {
     private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
 
@@ -43,7 +43,7 @@ class PostFragment: Fragment() {
             .onEach { pendingNetworkError ->
                 if (pendingNetworkError) {
                     view?.let {
-                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
+                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG).show()
                         viewModel.setUserHasSeenError()
                     }
                 }
