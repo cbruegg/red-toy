@@ -3,6 +3,9 @@ package com.cbruegg.redtoy.post
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -32,6 +35,8 @@ class PostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
+
+        setHasOptionsMenu(true)
 
         val postAdapter = PostContentAdapter(null, emptyList(), onLinkClick = viewModel::onLinkClick, Markwon.create(requireContext()))
         val layoutManager = LinearLayoutManager(context)
@@ -74,6 +79,32 @@ class PostFragment : Fragment() {
             .launchIn(lifecycleScope)
 
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_post, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.sharePost -> {
+                sharePost()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun sharePost() {
+        val post = viewModel.post.value
+        if (post != null) {
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, post.url)
+            }
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_post)))
+        }
     }
 
     override fun onDestroyView() {
