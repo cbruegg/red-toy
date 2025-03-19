@@ -35,21 +35,24 @@ class PostViewModel @Inject constructor(
     /**
      * Emits a link when the user clicks it. Call [didOpenLink] once the browser has been started.
      */
-    val requestedOpenLink: MutableStateFlow<String?> = _requestedOpenLink
+    val requestedOpenLink: StateFlow<String?> = _requestedOpenLink
 
     private val _pendingNetworkError = MutableStateFlow(false)
     /**
      * Emits `true` if there was a network error. The UI may display a warning in this case.
      * Call [setUserHasSeenError] afterwards.
      */
-    val pendingNetworkError: MutableStateFlow<Boolean> = _pendingNetworkError
+    val pendingNetworkError: StateFlow<Boolean> = _pendingNetworkError
 
-    fun loadPost(postId: PostId) {
+    init {
         viewModelScope.launch {
+            val args = PostFragmentArgs.fromSavedStateHandle(state)
+            val subreddit = args.subreddit
+            val permalink = args.permalink
+            val postId = args.postId
             _postId.value = postId
             try {
-                val args = PostFragmentArgs.fromSavedStateHandle(state)
-                repository.updateDataOfPost(args.permalink, args.subreddit)
+                repository.updateDataOfPost(permalink, subreddit)
             } catch (e: IOException) {
                 e.printStackTrace()
                 _pendingNetworkError.value = true
@@ -68,4 +71,5 @@ class PostViewModel @Inject constructor(
     fun setUserHasSeenError() {
         _pendingNetworkError.value = false
     }
+
 }
