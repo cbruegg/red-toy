@@ -3,6 +3,8 @@ package com.cbruegg.redtoy.post
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -80,4 +82,37 @@ class PostFragment: Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.post_menu, menu)
+
+        val shareMenuItem = menu.findItem(R.id.share_post)
+        shareMenuItem.setOnMenuItemClickListener {
+            onSharePostOptionsItemSelected()
+            true
+        }
+    }
+
+    private fun onSharePostOptionsItemSelected() {
+
+        val post = viewModel.post.value
+        if (post != null) {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Shared post:\n${post.content}")
+
+            // Optional: Add title and image if available
+            post.title?.let { shareIntent.putExtra(Intent.EXTRA_SUBJECT, it) }
+            // Note: For images, you would need to handle loading from network first
+
+            shareIntent.type = "text/plain"
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            Intent.createChooser(shareIntent, getString(R.string.share_post)).also {
+                startActivity(it)
+            }
+        } else {
+            Snackbar.make(binding.root, R.string.no_post_to_share, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
 }
