@@ -43,7 +43,7 @@ class PostFragment: Fragment() {
             .onEach { pendingNetworkError ->
                 if (pendingNetworkError) {
                     view?.let {
-                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
+                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG).show()
                         viewModel.setUserHasSeenError()
                     }
                 }
