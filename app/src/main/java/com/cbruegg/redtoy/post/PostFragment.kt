@@ -3,8 +3,12 @@ package com.cbruegg.redtoy.post
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -32,6 +36,11 @@ class PostFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val postAdapter = PostContentAdapter(null, emptyList(), onLinkClick = viewModel::onLinkClick, Markwon.create(requireContext()))
         val layoutManager = LinearLayoutManager(context)
@@ -42,8 +51,8 @@ class PostFragment: Fragment() {
         viewModel.pendingNetworkError.flowWithLifecycle(lifecycle)
             .onEach { pendingNetworkError ->
                 if (pendingNetworkError) {
-                    view?.let {
-                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
+                    view.let {
+                        Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG).show()
                         viewModel.setUserHasSeenError()
                     }
                 }
@@ -73,7 +82,31 @@ class PostFragment: Fragment() {
             }
             .launchIn(lifecycleScope)
 
-        return binding.root
+        activity?.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fragment_post, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.sharePost -> {
+                        val post = viewModel.post.value
+                        if (post != null) {
+                            val sendIntent: Intent = Intent().apply {
+                                action = Intent.ACTION_SEND
+                                putExtra(Intent.EXTRA_TEXT, "Check out this post: ${post.title} ${post.url}") // Customize the shared content here
+                                type = "text/plain"
+                            }
+
+                            val shareIntent = Intent.createChooser(sendIntent, null)
+                            startActivity(shareIntent)
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner)
     }
 
     override fun onDestroyView() {
