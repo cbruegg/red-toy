@@ -1,5 +1,6 @@
 package com.cbruegg.redtoy.posts
 
+import android.R.attr.text
 import android.os.Bundle
 import android.view.*
 import androidx.compose.foundation.Image
@@ -196,15 +197,21 @@ private fun LinkPostPreview() {
 @Composable
 private fun Post(post: Post, modifier: Modifier = Modifier) {
     Card(modifier = Modifier.padding(8.dp).then(modifier)) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-            PostImage(post)
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
-                Text(text = post.title, style = MaterialTheme.typography.h3, fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = post.author, style = MaterialTheme.typography.subtitle1, color = Color.DarkGray, fontSize = 12.sp)
-            }
-        }
+        // show the post
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = post.title,
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Text(
+                text = "Posted by ${post.author} in r/${post.subreddit}",
+                style = MaterialTheme.typography.body2,
+                modifier = Modifier.padding(bottom = 8.dp)
     }
 }
 
