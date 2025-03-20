@@ -196,14 +196,29 @@ private fun LinkPostPreview() {
 @Composable
 private fun Post(post: Post, modifier: Modifier = Modifier) {
     Card(modifier = Modifier.padding(8.dp).then(modifier)) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
-            PostImage(post)
-            Spacer(modifier = Modifier.width(8.dp))
-            Column {
-                Text(text = post.title, style = MaterialTheme.typography.h3, fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = post.author, style = MaterialTheme.typography.subtitle1, color = Color.DarkGray, fontSize = 12.sp)
-            }
+        PostImage(post)
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = post.title,
+                style = MaterialTheme.typography.h6,
+                fontSize = 16.sp,
+                color = Color.Black
+            )
+            Text(
+                text = "by ${post.author} in /r/${post.subreddit}",
+                style = MaterialTheme.typography.body2,
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
+            Text(
+                text = "${post.numComments} comments",
+                style = MaterialTheme.typography.body2,
+                fontSize = 12.sp,
+                color = Color.Gray
+            )
         }
     }
 }
