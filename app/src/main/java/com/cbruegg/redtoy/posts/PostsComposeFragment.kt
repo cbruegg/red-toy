@@ -196,7 +196,8 @@ private fun LinkPostPreview() {
 @Composable
 private fun Post(post: Post, modifier: Modifier = Modifier) {
     Card(modifier = Modifier.padding(8.dp).then(modifier)) {
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(8.dp)) {
+        // show the post
+        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start) {
             PostImage(post)
             Spacer(modifier = Modifier.width(8.dp))
             Column {
