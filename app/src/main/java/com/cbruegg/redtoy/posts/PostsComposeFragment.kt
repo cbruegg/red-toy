@@ -106,7 +106,13 @@ class PostsComposeFragment : Fragment() {
                 if (pendingNetworkError) {
                     view?.let {
                         Snackbar.make(it, R.string.network_error, Snackbar.LENGTH_LONG)
-                        viewModel.setUserHasSeenError()
+                            .addCallback(object : Snackbar.Callback() {
+                                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                                    super.onDismissed(transientBottomBar, event)
+                                    viewModel.setUserHasSeenError()
+                                }
+                            })
+                            .show()
                     }
                 }
             }
